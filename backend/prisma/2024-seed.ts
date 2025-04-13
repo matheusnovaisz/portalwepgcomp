@@ -1,6 +1,8 @@
 import {
   CommitteeLevel,
   CommitteeRole,
+  PresentationBlockType,
+  PresentationStatus,
   PrismaClient,
   Profile,
   SubmissionStatus,
@@ -38,25 +40,25 @@ async function main() {
       submissionDeadline: new Date('2024-11-08'),
       isActive: true,
       isEvaluationRestrictToLoggedUsers: true,
-      presentationDuration: 15,
-      presentationsPerPresentationBlock: 3,
+      presentationDuration: 20,
+      presentationsPerPresentationBlock: 6,
     },
   });
 
-  // const rooms = await prisma.room.createManyAndReturn({
-  //   data: [
-  //     {
-  //       eventEditionId: edition2024.id,
-  //       name: 'Sala A',
-  //       description: 'Sala A',
-  //     },
-  //     {
-  //       eventEditionId: edition2024.id,
-  //       name: 'Sala B',
-  //       description: 'Sala B',
-  //     },
-  //   ],
-  // });
+  const rooms = await prisma.room.createManyAndReturn({
+    data: [
+      {
+        eventEditionId: edition2024.id,
+        name: 'Sala A',
+        description: 'Sala A',
+      },
+      {
+        eventEditionId: edition2024.id,
+        name: 'Sala B',
+        description: 'Sala B',
+      },
+    ],
+  });
 
   const comiteeMembers = [
     {
@@ -167,7 +169,7 @@ async function main() {
     })),
   });
 
-  const professors_users = await prisma.userAccount.findMany({
+  const professorUsers = await prisma.userAccount.findMany({
     where: {
       profile: Profile.Professor,
     },
@@ -179,7 +181,7 @@ async function main() {
       presentation:
         'Redução de Artefatos Metálicos em Tomografias Odontológicas Utilizando Processamento Espectral',
       professor: 'Antonio Lopes Apolinario Junior',
-      advisorId: professors_users[4].id,
+      advisorId: professorUsers[4].id,
       topic: 'CA: Computação Visual (CVIS)',
     },
     {
@@ -187,14 +189,14 @@ async function main() {
       presentation:
         'Catalogação de fontes de literatura cinza em engenharia de software',
       professor: 'Manoel Gomes de Mendonça Neto',
-      advisorId: professors_users[5].id,
+      advisorId: professorUsers[5].id,
       topic: 'ESS: Engenharia de Software Experimental',
     },
     {
       name: 'Lucas Amparo Barbosa',
       presentation: '',
       professor: 'Antonio Lopes Apolinario Junior',
-      advisorId: professors_users[4].id,
+      advisorId: professorUsers[4].id,
       topic: 'CA: Computação Visual (CVIS)',
     },
     {
@@ -202,7 +204,7 @@ async function main() {
       presentation:
         'The Neuroscience of Testing: Enhancing Quality Assurance Through Cognitive Insights',
       professor: 'Eduardo Santana de Almeida',
-      advisorId: professors_users[6].id,
+      advisorId: professorUsers[6].id,
       topic: 'ESS: Engenharia de Software Experimental',
     },
     {
@@ -210,7 +212,7 @@ async function main() {
       presentation:
         'Análise de classificação multi-label nos desfechos da doença falciforme',
       professor: 'Marcos Ennes Barreto',
-      advisorId: professors_users[7].id,
+      advisorId: professorUsers[7].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -218,7 +220,7 @@ async function main() {
       presentation:
         'A Guide to Evaluating and Customizing Software Development Processes Using Hybrid Methods Based on Scrum',
       professor: 'Rita Suzana Pitangueira Maciel',
-      advisorId: professors_users[8].id,
+      advisorId: professorUsers[8].id,
       topic: 'ESS: Evolução de Software',
     },
     {
@@ -226,7 +228,7 @@ async function main() {
       presentation:
         'Enhancing Explainable Recommender Systems through Automated Ontology Population and Data Provenance Assurance',
       professor: 'Laís do Nascimento Salvador',
-      advisorId: professors_users[9].id,
+      advisorId: professorUsers[9].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -234,14 +236,14 @@ async function main() {
       presentation:
         'A comprehensive study of issue labeling in GitHub repositories',
       professor: 'Ivan do Carmo Machado',
-      advisorId: professors_users[10].id,
+      advisorId: professorUsers[10].id,
       topic: 'ESS: Medição, Mineração e Visualização de Software',
     },
     {
       name: 'Larrissa Dantas Xavier da Silva',
       presentation: '',
       professor: 'Daniela Barreiro Claro',
-      advisorId: professors_users[11].id,
+      advisorId: professorUsers[11].id,
       topic: 'CA: Sistemas de Informação, Banco de Dados e Web (SIBW)',
     },
     {
@@ -249,7 +251,7 @@ async function main() {
       presentation:
         'Cascading-Failure Disaster Recovery based on Time Varying Graph in EONs',
       professor: 'Gustavo Bittencourt Figueiredo',
-      advisorId: professors_users[12].id,
+      advisorId: professorUsers[12].id,
       topic: 'SC: Redes de Computadores (RC)',
     },
     {
@@ -257,14 +259,14 @@ async function main() {
       presentation:
         'Exploiting Calibration as a Multi-Objective Recommender System',
       professor: 'Frederico Araújo Durão',
-      advisorId: professors_users[13].id,
+      advisorId: professorUsers[13].id,
       topic: 'CA: Sistemas de Informação, Banco de Dados e Web (SIBW)',
     },
     {
       name: 'Andre Luiz Romano Madureira',
       presentation: 'Otimizando Comunicações NDN  em redes MANET',
       professor: 'Leobino Nascimento Sampaio',
-      advisorId: professors_users[14].id,
+      advisorId: professorUsers[14].id,
       topic: 'SC: Redes de Computadores (RC)',
     },
     {
@@ -272,7 +274,7 @@ async function main() {
       presentation:
         'United for humanity: developing a collaborative model based on crowdsourcing to engage volunteers in crisis recovery campaigns',
       professor: 'Vaninha Vieira dos Santos',
-      advisorId: professors_users[15].id,
+      advisorId: professorUsers[15].id,
       topic: 'CA: Sistemas de Informação, Banco de Dados e Web (SIBW)',
     },
     {
@@ -280,14 +282,14 @@ async function main() {
       presentation:
         'Serviços de Saúde Avançados: Conectividade e Segurança em Sistemas de Vida Assistida',
       professor: 'Leobino Nascimento Sampaio',
-      advisorId: professors_users[14].id,
+      advisorId: professorUsers[14].id,
       topic: 'SC: Redes de Computadores (RC)',
     },
     {
       name: 'George Pacheco Pinto',
       presentation: 'FoT-PDS: Towards Data Privacy in a Fog of Things',
       professor: 'Cássio Vinicius Serafim Prazeres',
-      advisorId: professors_users[16].id,
+      advisorId: professorUsers[16].id,
       topic: 'CA: Sistemas de Informação, Banco de Dados e Web (SIBW)',
     },
     {
@@ -295,7 +297,7 @@ async function main() {
       presentation:
         'Exploring Empathy in Software Engineering Based on the Practitioners’ Perspective',
       professor: 'Manoel Gomes de Mendonça Neto',
-      advisorId: professors_users[5].id,
+      advisorId: professorUsers[5].id,
       topic: 'ESS: Engenharia de Software Experimental',
     },
     {
@@ -303,7 +305,7 @@ async function main() {
       presentation:
         'Modelo de recomendações para melhoria da segurança psicológica no desenvolvimento de software',
       professor: 'Manoel Gomes de Mendonça Neto',
-      advisorId: professors_users[5].id,
+      advisorId: professorUsers[5].id,
       topic: 'ESS: Engenharia de Software Experimental',
     },
     {
@@ -311,7 +313,7 @@ async function main() {
       presentation:
         'A Data-Driven Approach to Assess Emergency Response in Urban Areas based on Historical Ambulance Calls',
       professor: 'Maycon Leone Maciel Peixoto',
-      advisorId: professors_users[17].id,
+      advisorId: professorUsers[17].id,
       topic: 'CA: Sistemas de Informação, Banco de Dados e Web (SIBW)',
     },
     {
@@ -319,7 +321,7 @@ async function main() {
       presentation:
         'Perceived Diversity in Software Engineering:  An Update and Extended Systematic Literature Review',
       professor: 'Manoel Gomes de Mendonça Neto',
-      advisorId: professors_users[5].id,
+      advisorId: professorUsers[5].id,
       topic: 'ESS: Engenharia de Software Experimental',
     },
     {
@@ -327,7 +329,7 @@ async function main() {
       presentation:
         'Sistema de recomendação de recursos educacionais baseados em competência',
       professor: 'Laís do Nascimento Salvador',
-      advisorId: professors_users[9].id,
+      advisorId: professorUsers[9].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -335,7 +337,7 @@ async function main() {
       presentation:
         'Maturity level of software systems to comply with the General  Data Protection Law (LGPD)',
       professor: 'Rita Suzana Pitangueira Maciel',
-      advisorId: professors_users[8].id,
+      advisorId: professorUsers[8].id,
       topic: 'ESS: Qualidade de Software',
     },
     {
@@ -343,7 +345,7 @@ async function main() {
       presentation:
         'Mecanismos para Offloading de Dados em Redes 5G Heterogêneas',
       professor: 'Gustavo Bittencourt Figueiredo',
-      advisorId: professors_users[12].id,
+      advisorId: professorUsers[12].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -351,7 +353,7 @@ async function main() {
       presentation:
         'Dispersion of Test Smells in mobile projects using the Flutter framework',
       professor: 'Ivan do Carmo Machado',
-      advisorId: professors_users[10].id,
+      advisorId: professorUsers[10].id,
       topic: 'ESS: Qualidade de Software',
     },
     {
@@ -359,7 +361,7 @@ async function main() {
       presentation:
         'Mixed Data Mining: a study focused on numerical and time series data.',
       professor: 'Robespierre Dantas da Rocha Pita',
-      advisorId: professors_users[2].id,
+      advisorId: professorUsers[2].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -367,7 +369,7 @@ async function main() {
       presentation:
         'Formação de Profissionais de Computação para Ciência Aberta',
       professor: 'Christina Von Flach Garcia Chavez',
-      advisorId: professors_users[18].id,
+      advisorId: professorUsers[18].id,
       topic: 'ESS: Educação em Engenharia de Software.',
     },
     {
@@ -375,14 +377,14 @@ async function main() {
       presentation:
         'Um Framework para Implementação Eficaz do Ensino Baseado em Competências no Ensino Superior de Computação.',
       professor: 'Laís do Nascimento Salvador',
-      advisorId: professors_users[9].id,
+      advisorId: professorUsers[9].id,
       topic: '',
     },
     {
       name: 'Railana Santana Lago',
       presentation: 'Towards Automated Refactoring of Smelly Test Code',
       professor: 'Ivan do Carmo Machado',
-      advisorId: professors_users[10].id,
+      advisorId: professorUsers[10].id,
       topic: 'ESS: Qualidade de Software',
     },
     {
@@ -390,7 +392,7 @@ async function main() {
       presentation:
         'Concept Drift on Delayed Partially Labeled Data Streamslmente rotulados',
       professor: 'Ricardo Araújo Rios',
-      advisorId: professors_users[19].id,
+      advisorId: professorUsers[19].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -398,7 +400,7 @@ async function main() {
       presentation:
         'Abordagens de programação inteira mista para consolidação de frete com frota heterogênea terceirizada, frete morto e custos de múltiplas entrega',
       professor: 'Rafael Augusto de Melo',
-      advisorId: professors_users[1].id,
+      advisorId: professorUsers[1].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -406,14 +408,14 @@ async function main() {
       presentation:
         'A Conceptual Framework for the Design of Virtual Learning Environments',
       professor: 'Rita Suzana Pitangueira Maciel',
-      advisorId: professors_users[8].id,
+      advisorId: professorUsers[8].id,
       topic: 'ESS: Educação em Engenharia de Software.',
     },
     {
       name: 'Marcos Vinícois dos Santos Ferreira',
       presentation: 'Fuzzifying Chaos in Dynamical Systems',
       professor: 'Ricardo Araújo Rios',
-      advisorId: professors_users[19].id,
+      advisorId: professorUsers[19].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -421,14 +423,14 @@ async function main() {
       presentation:
         'Burnout in Software Projects: An Analysis of Stack Exchange Discussions',
       professor: 'Manoel Gomes de Mendonca Neto',
-      advisorId: professors_users[5].id,
+      advisorId: professorUsers[5].id,
       topic: 'ESS: Engenharia de Software Experimental',
     },
     {
       name: 'Allan Sérgio Gonçalves Alves',
       presentation: '',
       professor: 'George Marconi de Araújo Lima',
-      advisorId: professors_users[20].id,
+      advisorId: professorUsers[20].id,
       topic: 'SC: Sistemas Embarcados e de Tempo Real (SETR)',
     },
     {
@@ -436,7 +438,7 @@ async function main() {
       presentation:
         'Uma abordagem baseada em ontologia para auxiliar a aplicação de princípios curriculares orientados a competências em recursos educacionais abertos.',
       professor: 'Laís do Nascimento Salvador',
-      advisorId: professors_users[9].id,
+      advisorId: professorUsers[9].id,
       topic:
         'CA: Interação Humano-Computador (IHC) e Informática e Educação (IEDU)',
     },
@@ -445,7 +447,7 @@ async function main() {
       presentation:
         'Avaliação segura de amostras em análise temporal baseada em medições para projetos de sistemas de tempo real',
       professor: 'George Marconi de Araújo Lima',
-      advisorId: professors_users[20].id,
+      advisorId: professorUsers[20].id,
       topic: 'SC: Sistemas Embarcados e de Tempo Real (SETR)',
     },
     {
@@ -453,7 +455,7 @@ async function main() {
       presentation:
         'Aplicação da aprendizagem baseada em projetos no ensino de ES: uma investigação no contexto da educação baseada em competências',
       professor: 'Laís do Nascimento Salvador',
-      advisorId: professors_users[9].id,
+      advisorId: professorUsers[9].id,
       topic:
         'CA: Interação Humano-Computador (IHC) e Informática e Educação (IEDU)',
     },
@@ -462,7 +464,7 @@ async function main() {
       presentation:
         'Métodos estatísticos e de inteligência computacional para análise temporal em sistemas de tempo real',
       professor: 'George Marconi de Araújo Lima',
-      advisorId: professors_users[20].id,
+      advisorId: professorUsers[20].id,
       topic: 'SC: Sistemas Embarcados e de Tempo Real (SETR)',
     },
     {
@@ -470,7 +472,7 @@ async function main() {
       presentation:
         'Stimulating the development of Computational Reasoning by game design strategies',
       professor: 'Ecivaldo de Souza Matos',
-      advisorId: professors_users[21].id,
+      advisorId: professorUsers[21].id,
       topic:
         'CA: Interação Humano-Computador (IHC) e Informática e Educação (IEDU)',
     },
@@ -479,7 +481,7 @@ async function main() {
       presentation:
         'TinyFED - Integrating Federated Learning into resource-constrained devices',
       professor: 'Cássio Vinicius Serafim Prazeres',
-      advisorId: professors_users[16].id,
+      advisorId: professorUsers[16].id,
       topic: 'SC: Sistemas Distribuídos (SD)',
     },
     {
@@ -487,7 +489,7 @@ async function main() {
       presentation:
         'Rumo a Avatares Inclusivos: Um Estudo sobre a Autorrepresentação em Ambientes Virtuais',
       professor: 'Vaninha Vieira dos Santos',
-      advisorId: professors_users[15].id,
+      advisorId: professorUsers[15].id,
       topic:
         'CA: Interação Humano-Computador (IHC) e Informática e Educação (IEDU)',
     },
@@ -496,7 +498,7 @@ async function main() {
       presentation:
         'Integrated Architecture for IoT Device Management in Smart Cities',
       professor: 'Cássio Vinicius Serafim Prazeres',
-      advisorId: professors_users[16].id,
+      advisorId: professorUsers[16].id,
       topic: 'SC: Sistemas Distribuídos (SD)',
     },
     {
@@ -504,7 +506,7 @@ async function main() {
       presentation:
         'modelo baseado em agentes para previsão da demanda de água em regiões metropolitanas',
       professor: 'Gecynalda Soares da Silva Gomes',
-      advisorId: professors_users[22].id,
+      advisorId: professorUsers[22].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -512,7 +514,7 @@ async function main() {
       presentation:
         'Escalabilidade e Segurança para Serviços e Aplicações em Computação de Borda Veicular Através de Redes de Dados Nomeados',
       professor: 'Leobino Nascimento Sampaio',
-      advisorId: professors_users[14].id,
+      advisorId: professorUsers[14].id,
       topic: 'SC: Redes de Computadores (RC)',
     },
     {
@@ -520,7 +522,7 @@ async function main() {
       presentation:
         'ANALYSIS OF GENERATIVE AND SEQUENCE LABELING METHODS FOR PORTUGUESE OPEN INFORMATION  EXTRACTION',
       professor: 'Daniela Barreiro Claro',
-      advisorId: professors_users[11].id,
+      advisorId: professorUsers[11].id,
       topic: 'CA: Inteligência Computacional e Otimização (ICOT)',
     },
     {
@@ -528,7 +530,7 @@ async function main() {
       presentation:
         'ToID: Reputação Baseada em Identificadores Descentralizados Para Aplicações Distribuídas',
       professor: 'Leobino Nascimento Sampaio',
-      advisorId: professors_users[14].id,
+      advisorId: professorUsers[14].id,
       topic: 'SC: Redes de Computadores (RC)',
     },
     {
@@ -536,14 +538,14 @@ async function main() {
       presentation:
         'Multi-MyIntegration: framework para Integração Segura de Dados Heterogêneos com GCS e Blockchain',
       professor: 'Laís do Nascimento Salvador',
-      advisorId: professors_users[9].id,
+      advisorId: professorUsers[9].id,
       topic: 'CA: Sistemas de Informação, Banco de Dados e Web (SIBW)',
     },
     {
       name: 'Antônio Cleber de Sousa Araújo',
       presentation: 'Arquitetura Adaptável na Camada de Enlace',
       professor: 'Leobino Nascimento Sampaio',
-      advisorId: professors_users[14].id,
+      advisorId: professorUsers[14].id,
       topic: 'SC: Redes de Computadores (RC)',
     },
     {
@@ -551,14 +553,14 @@ async function main() {
       presentation:
         'Sistemas de Reputação baseados em Blockchain para ambientes IoT',
       professor: 'Cássio Vinicius Serafim Prazeres',
-      advisorId: professors_users[16].id,
+      advisorId: professorUsers[16].id,
       topic: 'SC: Sistemas Distribuídos (SD)',
     },
     {
       name: 'Talita Rocha Pinheiro',
       presentation: '',
       professor: 'Leobino Nascimento Sampaio',
-      advisorId: professors_users[14].id,
+      advisorId: professorUsers[14].id,
       topic: 'SC: Redes de Computadores (RC)',
     },
     {
@@ -566,7 +568,7 @@ async function main() {
       presentation:
         'Além da IDE: expandindo a infraestrutura de dados espaciais por meio de blockchain',
       professor: 'George Marconi de Araújo Lima',
-      advisorId: professors_users[20].id,
+      advisorId: professorUsers[20].id,
       topic: 'SC: Sistemas Distribuídos (SD)',
     },
     {
@@ -574,14 +576,14 @@ async function main() {
       presentation:
         'Data-driven Decision Making Frameworks for Resource Utilization in 6G O-RAN',
       professor: 'Gustavo Bittencourt Figueiredo',
-      advisorId: professors_users[12].id,
+      advisorId: professorUsers[12].id,
       topic: 'SC: Redes de Computadores (RC)',
     },
     {
       name: 'Eduardo Ferreira da Silva',
       presentation: 'Review-based Recommender System',
       professor: 'Frederico Araújo Durão',
-      advisorId: professors_users[13].id,
+      advisorId: professorUsers[13].id,
       topic: 'CA: Sistemas de Informação, Banco de Dados e Web (SIBW)',
     },
   ];
@@ -606,7 +608,7 @@ async function main() {
     data: panelists,
   });
 
-  const submissions = panelistsAndPresentations.map((panelist, index) => ({
+  const submissionsData = panelistsAndPresentations.map((panelist, index) => ({
     title: panelist.presentation || 'Untitled Presentation',
     // topic: panelist.topic || 'Unspecified Topic',
     advisorId: panelist.advisorId,
@@ -618,8 +620,253 @@ async function main() {
     status: SubmissionStatus.Confirmed,
   }));
 
-  await prisma.submission.createMany({
-    data: submissions,
+  const submission = await prisma.submission.createManyAndReturn({
+    data: submissionsData,
+  });
+
+  const sessions = [
+    {
+      eventEditionId: edition2024.id,
+      type: PresentationBlockType.General,
+      title: 'Abertura',
+      startTime: new Date('2024-11-12T08:30:00'),
+      duration: 30,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[0].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 1',
+      startTime: new Date('2024-11-12T09:00:00'),
+      duration: 100,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[1].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 2',
+      startTime: new Date('2024-11-12T09:00:00'),
+      duration: 100,
+    },
+    {
+      eventEditionId: edition2024.id,
+      type: PresentationBlockType.General,
+      title: 'Coffee Break',
+      startTime: new Date('2024-11-12T10:40:00'),
+      duration: 20,
+    },
+    {
+      eventEditionId: edition2024.id,
+      type: PresentationBlockType.General,
+      title:
+        'Palestra \"Unico Academy nas Universidades: Ecossistema Unico Academy de Formação de Recursos Humanos, Pesquisa, Desenvolvimento e Inovação\"',
+      startTime: new Date('2024-11-12T11:00:00'),
+      duration: 80,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[0].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 3',
+      startTime: new Date('2024-11-12T12:20:00'),
+      duration: 40,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[1].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 4',
+      startTime: new Date('2024-11-12T12:20:00'),
+      duration: 40,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[0].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 5',
+      startTime: new Date('2024-11-13T08:40:00'),
+      duration: 120,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[1].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 6',
+      startTime: new Date('2024-11-13T08:40:00'),
+      duration: 120,
+    },
+    {
+      eventEditionId: edition2024.id,
+      type: PresentationBlockType.General,
+      title: 'Coffee Break',
+      startTime: new Date('2024-11-13T10:40:00'),
+      duration: 20,
+    },
+    {
+      eventEditionId: edition2024.id,
+      type: PresentationBlockType.General,
+      title: 'Diálogo com a coordenação do PGCOMP',
+      startTime: new Date('2024-11-13T11:00:00'),
+      duration: 40,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[0].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 7',
+      startTime: new Date('2024-11-13T11:40:00'),
+      duration: 80,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[0].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 8',
+      startTime: new Date('2024-11-13T11:40:00'),
+      duration: 80,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[0].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 9',
+      startTime: new Date('2024-11-14T08:40:00'),
+      duration: 120,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[1].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 10',
+      startTime: new Date('2024-11-14T08:40:00'),
+      duration: 120,
+    },
+    {
+      eventEditionId: edition2024.id,
+      type: PresentationBlockType.General,
+      title: 'Coffee Break',
+      startTime: new Date('2024-11-14T10:20:00'),
+      duration: 20,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[0].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 11',
+      startTime: new Date('2024-11-14T10:40:00'),
+      duration: 120,
+    },
+    {
+      eventEditionId: edition2024.id,
+      roomId: rooms[1].id,
+      type: PresentationBlockType.Presentation,
+      title: 'Sessão 12',
+      startTime: new Date('2024-11-14T10:40:00'),
+      duration: 120,
+    },
+    {
+      eventEditionId: edition2024.id,
+      type: PresentationBlockType.General,
+      title: 'Fechamento / Premiações',
+      startTime: new Date('2024-11-14T12:20:00'),
+      duration: 20,
+    },
+  ];
+
+  const presentationBlocks = await prisma.presentationBlock.createManyAndReturn(
+    {
+      data: sessions,
+    },
+  );
+
+  // Apresentações para o Dia 1
+  // Como as apresentações foram criadas de forma alternadas, utilizo o índice para incluir em seu respectivo bloco
+  await prisma.presentation.createMany({
+    data: submission.slice(0, 10).map((sub, index) => ({
+      submissionId: sub.id,
+      presentationBlockId:
+        index % 2 === 0 ? presentationBlocks[1].id : presentationBlocks[2].id,
+      positionWithinBlock: Math.floor(index / 2),
+      status: PresentationStatus.Presented,
+    })),
+  });
+
+  await prisma.presentation.createMany({
+    data: submission.slice(10, 14).map((sub, index) => ({
+      submissionId: sub.id,
+      presentationBlockId:
+        index % 2 === 0 ? presentationBlocks[5].id : presentationBlocks[6].id,
+      positionWithinBlock: Math.floor(index / 2),
+      status: PresentationStatus.Presented,
+    })),
+  });
+
+  // Apresentações para o Dia 2
+  // Como existem buracos na programação, criei as apresentações diretamente com o indíce que já sabia
+  await prisma.presentation.createMany({
+    data: [14, 17, 19, 21, 23]
+      .map((index) => submission[index])
+      .map((sub, index) => ({
+        submissionId: sub.id,
+        presentationBlockId: presentationBlocks[7].id,
+        positionWithinBlock: index,
+        status: PresentationStatus.Presented,
+      })),
+  });
+
+  await prisma.presentation.createMany({
+    data: [15, 16, 18, 20, 22, 24]
+      .map((index) => submission[index])
+      .map((sub, index) => ({
+        submissionId: sub.id,
+        presentationBlockId: presentationBlocks[8].id,
+        positionWithinBlock: index,
+        status: PresentationStatus.Presented,
+      })),
+  });
+
+  await prisma.presentation.createMany({
+    data: [25, 27, 28, 30]
+      .map((index) => submission[index])
+      .map((sub, index) => ({
+        submissionId: sub.id,
+        presentationBlockId: presentationBlocks[11].id,
+        positionWithinBlock: index,
+        status: PresentationStatus.Presented,
+      })),
+  });
+
+  await prisma.presentation.createMany({
+    data: [26, 29, 31]
+      .map((index) => submission[index])
+      .map((sub, index) => ({
+        submissionId: sub.id,
+        presentationBlockId: presentationBlocks[12].id,
+        positionWithinBlock: index,
+        status: PresentationStatus.Presented,
+      })),
+  });
+
+  // Apresentações para o Dia 3
+  // Mesma lógica do Dia 1, porém utilizando os índices finais
+  await prisma.presentation.createMany({
+    data: submission.slice(-20, -10).map((sub, index) => ({
+      submissionId: sub.id,
+      presentationBlockId:
+        index % 2 === 0 ? presentationBlocks[13].id : presentationBlocks[14].id,
+      positionWithinBlock: Math.floor(index / 2),
+      status: PresentationStatus.Presented,
+    })),
+  });
+
+  await prisma.presentation.createMany({
+    data: submission.slice(-10).map((sub, index) => ({
+      submissionId: sub.id,
+      presentationBlockId:
+        index % 2 === 0 ? presentationBlocks[16].id : presentationBlocks[17].id,
+      positionWithinBlock: Math.floor(index / 2),
+      status: PresentationStatus.Presented,
+    })),
   });
 
   console.log('2024 Edition Seeding completed.');
