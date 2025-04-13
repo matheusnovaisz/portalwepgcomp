@@ -27,7 +27,7 @@
     "prisma:migrate": "prisma db push",
     "postinstall": "prisma generate",
     "clean": "rm -rf package-lock.json node_modules && npm cache clean --force",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/2024-seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
