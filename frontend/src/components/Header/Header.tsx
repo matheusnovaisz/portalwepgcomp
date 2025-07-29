@@ -195,11 +195,6 @@ export default function Header() {
                   </Link>
                 </div>
                 {!signed && (
-                  <li className="nav-wall">
-                    <div className="nav-wall vr text-black"></div>
-                  </li>
-                )}
-                {!signed && (
                   <li className="nav-item">
                     <Link
                       className="nav-link active text-black"
@@ -210,7 +205,6 @@ export default function Header() {
                     </Link>
                   </li>
                 )}
-                <div className="vr text-black"></div>
                 <div
                   className={`nav-item ${
                     selectedItem === "programação do evento" ? "fw-bold" : ""
@@ -218,13 +212,12 @@ export default function Header() {
                   onClick={() => handleItemClick("programação do evento")}
                 >
                   <Link
-                    className="nav-link text-black tamanho-texto-programacao-evento"
+                    className="nav-link text-black"
                     href="home#Programacao"
                   >
-                    Programação do evento
+                    Programação
                   </Link>
                 </div>
-                <div className="vr text-black"></div>
                 <div
                   className={`nav-item ${
                     selectedItem === "orientações" ? "fw-bold" : ""
@@ -235,7 +228,6 @@ export default function Header() {
                     Orientações
                   </Link>
                 </div>
-                <div className="vr text-black"></div>
                 <div
                   className={`nav-item ${
                     selectedItem === "contato" ? "fw-bold" : ""
@@ -246,7 +238,6 @@ export default function Header() {
                     Contato
                   </Link>
                 </div>
-                <div className="vr text-black"></div>
                 <li className="nav-item">
                   {signed ? (
                     <div className="welcome-user">
