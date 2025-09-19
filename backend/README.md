@@ -22,6 +22,13 @@
 $ npm install
 ```
 
+## Configurar banco
+### Execute e preencherá o banco de dados corretamente
+```
+npm run prisma:migrate
+npm run seed
+```
+
 ## Execução
 
 ```bash
