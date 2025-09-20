@@ -2,7 +2,8 @@
 */dist
 */node_modules
 /build
-
+dump_wepgcomp.sql
+dump.sql
 # Logs
 logs
 *.log
