@@ -97,6 +97,7 @@ model UserAccount {
   profile                 Profile            @default(DoctoralStudent) @map("profile")
   level                   UserLevel          @default(Default) @map("level")
   isActive                Boolean            @default(true) @map("is_active")
+  isTeacherApproved       Boolean            @default(false)
   advisorFor              Submission[]       @relation("AdvisorRelation")
   mainAuthored            Submission[]       @relation("MainAuthorRelation")
   createdAt               DateTime           @default(now()) @map("created_at")

@@ -5,7 +5,11 @@ import * as bcrypt from 'bcrypt';
 import { AppException } from '../exceptions/app.exception';
 import { MailingService } from '../mailing/mailing.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserDto, SetAdminDto } from './dto/create-user.dto';
+import {
+  CreateUserDto,
+  SetAdminDto,
+  SetTeacherApprovalDto,
+} from './dto/create-user.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
 
 @Injectable()
@@ -19,7 +23,9 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     if (createUserDto.profile !== Profile.Listener) {
       if (!createUserDto.email.toLowerCase().endsWith('@ufba.br')) {
-        throw new BadRequestException('Apenas emails @ufba.br podem ser cadastrados.') ;
+        throw new BadRequestException(
+          'Apenas emails @ufba.br podem ser cadastrados.',
+        );
       }
     }
 
@@ -77,7 +83,14 @@ export class UserService {
         ...createUserDto,
         password: hashedPassword,
         level: shouldBeSuperAdmin ? UserLevel.Superadmin : UserLevel.Default,
-        isActive: createUserDto.profile === Profile.Professor && !shouldBeSuperAdmin ? false : true,
+        isActive:
+          createUserDto.profile === Profile.Professor && !shouldBeSuperAdmin
+            ? false
+            : true,
+        isTeacherApproved:
+          createUserDto.profile === Profile.Professor && !shouldBeSuperAdmin
+            ? false
+            : true,
       },
     });
 
@@ -326,7 +339,7 @@ export class UserService {
     } else if (roles && typeof roles === 'string') {
       whereClause.level = roles as UserLevel;
     }
-    
+
     if (profiles && Array.isArray(profiles)) {
       whereClause.profile = { in: profiles as Profile[] };
     } else if (profiles && typeof profiles === 'string') {
@@ -350,6 +363,7 @@ export class UserService {
         level: true,
         isVerified: true,
         isActive: true,
+        isTeacherApproved: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -409,10 +423,85 @@ export class UserService {
     }
   }
 
-  async updateRegistrationNumber(userId: string, registrationNumber: string | null): Promise<void> {
+  async updateRegistrationNumber(
+    userId: string,
+    registrationNumber: string | null,
+  ): Promise<void> {
     await this.prismaClient.userAccount.update({
       where: { id: userId },
       data: { registrationNumber },
     });
+  }
+
+  async approveTeacher(setTeacherApprovalDto: SetTeacherApprovalDto) {
+    const { targetUserId } = setTeacherApprovalDto;
+
+    // Verify target user exists and is a professor
+    const targetUser = await this.prismaClient.userAccount.findUnique({
+      where: { id: targetUserId },
+    });
+
+    if (!targetUser) {
+      throw new AppException('Usuário não encontrado.', 404);
+    }
+
+    if (targetUser.profile !== Profile.Professor) {
+      throw new AppException('Apenas professores podem ser aprovados.', 400);
+    }
+
+    // Update teacher approval status
+    const updatedUser = await this.prismaClient.userAccount.update({
+      where: { id: targetUserId },
+      data: {
+        isTeacherApproved: true,
+        isActive: true,
+      },
+    });
+
+    return {
+      message: 'Professor aprovado com sucesso.',
+      user: {
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isTeacherApproved: updatedUser.isTeacherApproved,
+        isActive: updatedUser.isActive,
+      },
+    };
+  }
+
+  async rejectTeacher(setTeacherApprovalDto: SetTeacherApprovalDto) {
+    const { targetUserId } = setTeacherApprovalDto;
+
+    const targetUser = await this.prismaClient.userAccount.findUnique({
+      where: { id: targetUserId },
+    });
+
+    if (!targetUser) {
+      throw new AppException('Usuário não encontrado.', 404);
+    }
+
+    if (targetUser.profile !== Profile.Professor) {
+      throw new AppException('Apenas professores podem ser rejeitados.', 400);
+    }
+
+    const updatedUser = await this.prismaClient.userAccount.update({
+      where: { id: targetUserId },
+      data: {
+        isTeacherApproved: false,
+        isActive: false,
+      },
+    });
+
+    return {
+      message: 'Professor rejeitado com sucesso.',
+      user: {
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isTeacherApproved: updatedUser.isTeacherApproved,
+        isActive: updatedUser.isActive,
+      },
+    };
   }
 }

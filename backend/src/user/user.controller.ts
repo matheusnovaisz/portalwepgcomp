@@ -11,7 +11,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, SetAdminDto } from './dto/create-user.dto';
+import {
+  CreateUserDto,
+  SetAdminDto,
+  SetTeacherApprovalDto,
+} from './dto/create-user.dto';
 import { Public, UserLevels } from '../auth/decorators/user-level.decorator';
 import { Profile, UserLevel } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -68,7 +72,10 @@ export class UserController {
     description: 'Activate or deactivate the user.',
   })
   @ApiTags('Users')
-  async toggleUserActivation(@Param('id') id: string, @Query('activate') activate: boolean) {
+  async toggleUserActivation(
+    @Param('id') id: string,
+    @Query('activate') activate: boolean,
+  ) {
     if (activate === undefined) {
       throw new AppException('O campo "activate" é obrigatório.', 400);
     }
@@ -104,7 +111,7 @@ export class UserController {
     const toArray = (input?: string | string[]): string[] => {
       if (!input) return [];
       if (Array.isArray(input)) return input;
-      return input.split(',').map(value => value.trim());
+      return input.split(',').map((value) => value.trim());
     };
 
     const rolesArray = roles ? toArray(roles) : undefined;
@@ -133,5 +140,33 @@ export class UserController {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @Post('approve-teacher')
+  @UserLevels(UserLevel.Superadmin, UserLevel.Admin)
+  @ApiBearerAuth()
+  @ApiTags('Users')
+  async approveTeacher(@Body() setTeacherApprovalDto: SetTeacherApprovalDto) {
+    return await this.userService.approveTeacher(setTeacherApprovalDto);
+  }
+
+  @Post('reject-teacher')
+  @UserLevels(UserLevel.Superadmin, UserLevel.Admin)
+  @ApiBearerAuth()
+  @ApiTags('Users')
+  async rejectTeacher(@Body() setTeacherApprovalDto: SetTeacherApprovalDto) {
+    return await this.userService.rejectTeacher(setTeacherApprovalDto);
+  }
+
+  @Get('pending-teachers')
+  @UserLevels(UserLevel.Superadmin, UserLevel.Admin)
+  @ApiBearerAuth()
+  @ApiTags('Users')
+  async getPendingTeachers() {
+    return await this.userService.findAll(
+      undefined, // roles
+      ['Professor'], // profiles - only professors
+      'Inactive', // status - inactive users (pending approval)
+    );
   }
 }

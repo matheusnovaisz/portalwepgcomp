@@ -6,6 +6,7 @@ import {
   IsBoolean,
   Length,
   ValidateIf,
+  IsNotEmpty,
 } from 'class-validator';
 
 export enum Profile {
@@ -67,4 +68,14 @@ export class SetAdminDto {
   @IsString()
   @Length(36)
   targetUserId: string;
+}
+
+export class SetTeacherApprovalDto {
+  @IsString()
+  @IsNotEmpty()
+  targetUserId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  requestUserId: string;
 }
